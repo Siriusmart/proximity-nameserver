@@ -31,8 +31,8 @@ async fn main() {
         .await
         .execute(
             "CREATE TABLE IF NOT EXISTS Translation (
-            discordID       STRING NOT NULL,
-            ign             STRING NOT NULL,
+            discordID       TEXT NOT NULL,
+            ign             TEXT NOT NULL,
 
             PRIMARY KEY (discordID, ign)
         )",
@@ -105,10 +105,10 @@ async fn main() {
                     let mut res = HashMap::new();
 
                     stmt.query([]).unwrap().for_each(|row| {
-                        let id: u64 = row.get_unwrap("discordID");
+                        let id: String = row.get_unwrap("discordID");
                         let ign: String = row.get_unwrap("ign");
 
-                        res.entry(id.to_string()).or_insert(Vec::new()).push(ign);
+                        res.entry(id).or_insert(Vec::new()).push(ign);
                     }).unwrap();
 
                     Json(res)
