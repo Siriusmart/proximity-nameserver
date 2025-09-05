@@ -56,7 +56,7 @@ async fn main() {
             }
 
             let mut stmt = conn.prepare(
-                format!(r#"INSERT IGNORE INTO Translation (discordID, ign) VALUES ("{discord_id}", "{ign}");"#).as_str()).unwrap();
+                format!(r#"INSERT OR IGNORE INTO Translation (discordID, ign) VALUES ("{discord_id}", "{ign}");"#).as_str()).unwrap();
 
             stmt.execute([]).unwrap().to_string()
         }))
