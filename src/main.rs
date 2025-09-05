@@ -44,7 +44,7 @@ async fn main() {
         .route("/api/v1/add", post(|State(conn): State<Arc<Mutex<Connection>>>, content: Json<ModifyReq>| async move {
             let conn = conn.lock().await;
 
-            if content.id.as_str() != BOTPASS.get().unwrap().as_str() {
+            if content.pw.as_str() != BOTPASS.get().unwrap().as_str() {
                 return "-1".to_string();
             }
 
@@ -63,7 +63,7 @@ async fn main() {
         .route("/api/v1/remove", post(|State(conn): State<Arc<Mutex<Connection>>>, content: Json<ModifyReq>| async move {
             let conn = conn.lock().await;
 
-            if content.id.as_str() != BOTPASS.get().unwrap().as_str() {
+            if content.pw.as_str() != BOTPASS.get().unwrap().as_str() {
                 return "-1".to_string();
             }
 
