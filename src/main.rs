@@ -45,7 +45,7 @@ async fn main() {
             let conn = conn.lock().await;
 
             if content.id.as_str() != BOTPASS.get().unwrap().as_str() {
-                return "0".to_string();
+                return "-1".to_string();
             }
 
             let ign = content.ign.as_str();
@@ -64,7 +64,7 @@ async fn main() {
             let conn = conn.lock().await;
 
             if content.id.as_str() != BOTPASS.get().unwrap().as_str() {
-                return "0".to_string();
+                return "-1".to_string();
             }
 
             let ign = content.ign.as_str();
