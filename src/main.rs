@@ -1,7 +1,11 @@
-use std::{collections::HashMap, env, sync::{Arc, OnceLock}};
+use std::{
+    collections::HashMap,
+    env,
+    sync::{Arc, OnceLock},
+};
 
 use axum::{Json, Router, extract::State, routing::post};
-use rusqlite::{fallible_streaming_iterator::FallibleStreamingIterator, Connection};
+use rusqlite::{Connection, fallible_streaming_iterator::FallibleStreamingIterator};
 use serde::{Deserialize, Serialize};
 use tokio::{net::TcpListener, sync::Mutex};
 
@@ -24,7 +28,9 @@ async fn main() {
         .unwrap_or(25550);
     let db_path = env::var("DB").unwrap_or("db.sqlite".to_string());
     static BOTPASS: OnceLock<String> = OnceLock::new();
-    BOTPASS.set(env::var("PASSWORD").expect("missing env PASSWORD")).unwrap();
+    BOTPASS
+        .set(env::var("PASSWORD").expect("missing env PASSWORD"))
+        .unwrap();
 
     let conn = Arc::new(Mutex::new(Connection::open(db_path).unwrap()));
     conn.lock()
@@ -85,19 +91,9 @@ async fn main() {
                 |State(conn): State<Arc<Mutex<Connection>>>, content: Json<WhoIsReq>| async move {
                     let conn = conn.lock().await;
 
-                    if content.ids.iter().any(|id| id.chars().any(|c| !c.is_ascii_digit())) {
+                    if content.ids.iter().any(|id| id.chars().any(|c| !c.is_ascii_digit())) || content.ids.is_empty() {
                         return Json(HashMap::new());
                     }
-
-                    println!(
-                            "SELECT discordID, ign FROM Translation WHERE {}",
-                            content
-                                .ids
-                                .iter()
-                                .map(|id| format!(r#"discordID="{id}""#))
-                                .collect::<Vec<_>>()
-                                .join(" OR ")
-                        );
 
                     let mut stmt = conn.prepare(
                         format!(
