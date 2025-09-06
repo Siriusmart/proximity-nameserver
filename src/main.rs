@@ -89,6 +89,16 @@ async fn main() {
                         return Json(HashMap::new());
                     }
 
+                    println!(
+                            "SELECT discordID, ign FROM Translation WHERE {}",
+                            content
+                                .ids
+                                .iter()
+                                .map(|id| format!(r#"discordID="{id}""#))
+                                .collect::<Vec<_>>()
+                                .join(" OR ")
+                        );
+
                     let mut stmt = conn.prepare(
                         format!(
                             "SELECT discordID, ign FROM Translation WHERE {}",
